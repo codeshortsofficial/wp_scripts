@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Page</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/template-loader.js"></script>
+</head>
+<body>
+  <div data-include="header.html"></div>
+
+  <main>
+    <h1>Welcome to My Website</h1>
+    <p>This is the home page.</p>
+  </main>
+
+  <div data-include="footer.html"></div>
+
+  <script>
+
+
+        // js/template-loader.js
+        (function ($) {
+          $.fn.loadTemplates = function (callback) {
+            const includes = $('[data-include]');
+            let remaining = includes.length;
+        
+            if (remaining === 0 && callback) callback();
+        
+            includes.each(function () {
+              const $el = $(this);
+              const file = $el.data('include');
+        
+              if (!file) return;
+        
+              $.get(file, function (data) {
+                $el.replaceWith(data);
+              }).always(function () {
+                remaining--;
+                if (remaining === 0 && callback) callback();
+              });
+            });
+          };
+        })(jQuery);
+
+    
+    $(document).ready(function () {
+      $(document).loadTemplates(function () {
+        console.log("Templates loaded!");
+      });
+    });
+  </script>
+</body>
+</html>
+
